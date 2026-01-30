@@ -9,6 +9,7 @@ export const signInRouter =  Router();
 signInRouter.post('/sign-in', async (req, res) => {
     const {email, password} = req.body;
 
+    // Vérification de la présence des champs requis
     if (!email || !password) {
         return res.status(400).json({ error: 'Email et mot de passe sont requis' });
     }
@@ -18,12 +19,14 @@ signInRouter.post('/sign-in', async (req, res) => {
             where: {email},
         });
 
+        // Vérification de l'existence de l'utilisateur
         if (!user) {
             return res.status(401).json({error: 'Email ou mot de passe incorrect'});
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
 
+        // Vérification de la validité du mot de passe
         if (!isPasswordValid) {
             return res.status(401).json({error: 'Email ou mot de passe incorrect'});
         }
@@ -34,6 +37,7 @@ signInRouter.post('/sign-in', async (req, res) => {
             { expiresIn: '7d' }
         );
 
+        // Retourne les informations de l'utilisateur et le token
         return res.status(200).json({
             message: 'Connexion réussie',
             token,

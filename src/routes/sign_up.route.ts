@@ -51,12 +51,11 @@ authRouter.post('/sign-up', async (req, res) => {
 });
 
 // POST /auth/login
-// Accessible via POST /auth/login
 authRouter.post('/login', async (req: Request, res: Response) => {
     const {email, password} = req.body
 
     try {
-        // 1. Vérifier que l'utilisateur existe
+        // Vérifications de l'existence de l'utilisateur
         const user = await prisma.user.findUnique({
             where: {email},
         })
@@ -65,24 +64,24 @@ authRouter.post('/login', async (req: Request, res: Response) => {
             return res.status(401).json({error: 'Email ou mot de passe incorrect'})
         }
 
-        // 2. Vérifier le mot de passe
+        // Vérification du mot de passe
         const isPasswordValid = await bcrypt.compare(password, user.password)
 
         if (!isPasswordValid) {
             return res.status(401).json({error: 'Email ou mot de passe incorrect'})
         }
 
-        // 3. Générer le JWT
+        // Générer le JWT
         const token = jwt.sign(
             {
                 userId: user.id,
                 email: user.email,
             },
             process.env.JWT_SECRET as string,
-            {expiresIn: '1h'}, // Le token expire dans 1 heure
+            {expiresIn: '7d'},
         )
 
-        // 4. Retourner le token
+        // Retourne les informations de l'utilisateur et le token
         return res.status(200).json({
             message: 'Connexion réussie',
             token,
