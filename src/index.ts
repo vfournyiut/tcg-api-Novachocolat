@@ -2,6 +2,10 @@ import {createServer} from "http";
 import {env} from "./env";
 import express from "express";
 import cors from "cors";
+import 'dotenv/config';
+import { authRouter } from "./routes/sign_up.route";
+import { signInRouter } from "./routes/sign_in.route";
+import { cardsRouter } from "./routes/cards.route";
 
 // Create Express app
 export const app = express();
@@ -18,7 +22,9 @@ app.use(express.json());
 
 // Serve static files (Socket.io test client)
 app.use(express.static('public'));
-
+app.use('/api/auth', authRouter)
+app.use('/api/auth', signInRouter);
+app.use('/api/cards', cardsRouter);
 // Health check endpoint
 app.get("/api/health", (_req, res) => {
     res.json({status: "ok", message: "TCG Backend Server is running"});
