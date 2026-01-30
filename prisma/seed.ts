@@ -12,7 +12,9 @@ async function main() {
     await prisma.user.deleteMany();
     await prisma.deck.deleteMany();
     await prisma.deckCard.deleteMany();
+    await prisma.$executeRaw`DELETE FROM sqlite_sequence WHERE name = 'User'`
 
+    // Tous les utilisateurs auront le mot de passe "password123"
     const hashedPassword = await bcrypt.hash("password123", 10);
 
     await prisma.user.createMany({
@@ -27,8 +29,13 @@ async function main() {
                 email: "blue@example.com",
                 password: hashedPassword,
             },
+            {
+                username: 'alice',
+                email: 'alice@example.com',
+                password: hashedPassword,
+            },
         ],
-    });
+    }); 
 
     const redUser = await prisma.user.findUnique({where: {email: "red@example.com"}});
     const blueUser = await prisma.user.findUnique({where: {email: "blue@example.com"}});
