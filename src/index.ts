@@ -6,6 +6,7 @@ import 'dotenv/config';
 import { authRouter } from "./routes/sign_up.route";
 import { signInRouter } from "./routes/sign_in.route";
 import { cardsRouter } from "./routes/cards.route";
+import { decksRouter } from "./routes/decks.route";
 
 // Create Express app
 export const app = express();
@@ -25,6 +26,7 @@ app.use(express.static('public'));
 app.use('/api/auth', authRouter)
 app.use('/api/auth', signInRouter);
 app.use('/api/cards', cardsRouter);
+app.use('/api/decks', decksRouter);
 // Health check endpoint
 app.get("/api/health", (_req, res) => {
     res.json({status: "ok", message: "TCG Backend Server is running"});

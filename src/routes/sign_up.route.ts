@@ -2,6 +2,7 @@ import {Request, Response, Router} from 'express'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { prisma } from '../database';
+import { env } from '../env';
 
 export const authRouter = Router()
 
@@ -31,7 +32,7 @@ authRouter.post('/sign-up', async (req, res) => {
 
     const token = jwt.sign(
       { userId: newUser.id, email: newUser.email },
-      process.env.JWT_SECRET as string,
+      env.JWT_SECRET,
       { expiresIn: '7d' }
     );
 
