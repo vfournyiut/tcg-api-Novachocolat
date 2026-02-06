@@ -12,7 +12,6 @@ async function main() {
     await prisma.user.deleteMany();
     await prisma.deck.deleteMany();
     await prisma.deckCard.deleteMany();
-    await prisma.$executeRaw`DELETE FROM sqlite_sequence WHERE name = 'User'`
 
     // Tous les utilisateurs auront le mot de passe "password123"
     const hashedPassword = await bcrypt.hash("password123", 10);
