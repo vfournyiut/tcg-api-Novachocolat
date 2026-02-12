@@ -11,14 +11,8 @@ export const decksRouter = Router();
 // POST /decks - Create a new deck
 decksRouter.post('/', authMiddleware, async (req: Request, res: Response): Promise<void> => {
     try {
-        const userId = req.user?.userId;
+        const userId = req.user!.userId;
         const { name, cards } = req.body;
-
-
-        if (!userId) {
-             res.status(401).json({ error: 'Utilisateur non authentifié' });
-             return;
-        }
 
         if (!name) {
              res.status(400).json({ error: 'Le nom du deck est requis' });
@@ -78,12 +72,7 @@ decksRouter.post('/', authMiddleware, async (req: Request, res: Response): Promi
 // GET /decks/mine - Get all decks of the authenticated user
 decksRouter.get('/mine', authMiddleware, async (req: Request, res: Response): Promise<void> => {
     try {
-        const userId = req.user?.userId;
-
-        if (!userId) {
-             res.status(401).json({ error: 'Utilisateur non authentifié' });
-             return;
-        }
+        const userId = req.user!.userId;
 
         const decks = await prisma.deck.findMany({
             where: {
@@ -113,13 +102,8 @@ decksRouter.get('/mine', authMiddleware, async (req: Request, res: Response): Pr
 // GET /decks/:id - Get a specific deck by ID
 decksRouter.get('/:id', authMiddleware, async (req: Request, res: Response): Promise<void> => {
     try {
-        const userId = req.user?.userId;
+        const userId = req.user!.userId;
         const deckId = parseInt(req.params.id);
-
-        if (!userId) {
-             res.status(401).json({ error: 'Utilisateur non authentifié' });
-             return;
-        }
 
         if (isNaN(deckId)) {
              res.status(400).json({ error: 'ID de deck invalide' });
@@ -160,14 +144,9 @@ decksRouter.get('/:id', authMiddleware, async (req: Request, res: Response): Pro
 // PATCH /decks/:id - Update a specific deck
 decksRouter.patch('/:id', authMiddleware, async (req: Request, res: Response): Promise<void> => {
     try {
-        const userId = req.user?.userId;
+        const userId = req.user!.userId;
         const deckId = parseInt(req.params.id);
         const { name, cards } = req.body;
-
-        if (!userId) {
-             res.status(401).json({ error: 'Utilisateur non authentifié' });
-             return;
-        }
 
         if (isNaN(deckId)) {
              res.status(400).json({ error: 'ID de deck invalide' });
@@ -251,13 +230,8 @@ decksRouter.patch('/:id', authMiddleware, async (req: Request, res: Response): P
 // DELETE /decks/:id - Delete a specific deck
 decksRouter.delete('/:id', authMiddleware, async (req: Request, res: Response): Promise<void> => {
     try {
-        const userId = req.user?.userId;
+        const userId = req.user!.userId;
         const deckId = parseInt(req.params.id);
-
-        if (!userId) {
-             res.status(401).json({ error: 'Utilisateur non authentifié' });
-             return;
-        }
 
         if (isNaN(deckId)) {
              res.status(400).json({ error: 'ID de deck invalide' });
