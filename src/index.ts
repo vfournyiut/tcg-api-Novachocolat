@@ -3,6 +3,8 @@ import {env} from "./env";
 import express from "express";
 import cors from "cors";
 import 'dotenv/config';
+import swaggerUi from 'swagger-ui-express';
+import { generateSwaggerSpec } from "./swagger/index";
 import { authRouter } from "./routes/sign_up.route";
 import { signInRouter } from "./routes/sign_in.route";
 import { cardsRouter } from "./routes/cards.route";
@@ -23,6 +25,14 @@ app.use(express.json());
 
 // Serve static files (Socket.io test client)
 app.use(express.static('public'));
+
+// Swagger UI documentation
+const swaggerSpec = generateSwaggerSpec();
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: 'TCG API Documentation',
+}));
+
 app.use('/api/auth', authRouter)
 app.use('/api/auth', signInRouter);
 app.use('/api/cards', cardsRouter);
@@ -42,6 +52,7 @@ if (require.main === module) {
     try {
         httpServer.listen(env.PORT, () => {
             console.log(`\n🚀 Server is running on http://localhost:${env.PORT}`);
+            console.log(`📚 API Documentation available at http://localhost:${env.PORT}/api-docs`);
             console.log(`🧪 Socket.io Test Client available at http://localhost:${env.PORT}`);
         });
     } catch (error) {

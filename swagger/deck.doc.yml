@@ -1,0 +1,486 @@
+paths:
+  /api/decks:
+    post:
+      tags:
+        - Decks
+      summary: Créer un nouveau deck
+      description: Crée un deck avec un nom et exactement 10 cartes. Nécessite une authentification JWT.
+      operationId: createDeck
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeckInput"
+            examples:
+              validDeck:
+                summary: Deck valide avec 10 cartes
+                value:
+                  name: "Mon Deck Électrique"
+                  cardIds: [25, 26, 135, 135, 172, 172, 172, 81, 100, 101]
+      responses:
+        "201":
+          description: Deck créé avec succès
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Deck"
+              examples:
+                success:
+                  summary: Deck créé
+                  value:
+                    id: 1
+                    name: "Mon Deck Électrique"
+                    userId: 1
+                    cards:
+                      - id: 1
+                        deckId: 1
+                        cardId: 25
+                        cards:
+                          id: 25
+                          name: "Pikachu"
+                          hp: 60
+                          attack: 50
+                          type: "Electric"
+                          pokedexNumber: 25
+                          imgUrl: "https://images.pokemontcg.io/base1/58.png"
+                    createdAt: "2024-01-15T10:30:00.000Z"
+                    updatedAt: "2024-01-15T10:30:00.000Z"
+        "400":
+          description: Données invalides
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                missingName:
+                  summary: Nom manquant
+                  value:
+                    error: "Le nom du deck est requis"
+                invalidCardCount:
+                  summary: Nombre de cartes incorrect
+                  value:
+                    error: "Un deck doit contenir exactement 10 cartes"
+                invalidCardIds:
+                  summary: IDs de cartes invalides
+                  value:
+                    error: "Les IDs de cartes doivent être des nombres valides"
+        "401":
+          description: Non authentifié
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                noToken:
+                  summary: Token manquant
+                  value:
+                    error: "Token d'authentification manquant"
+                invalidToken:
+                  summary: Token invalide
+                  value:
+                    error: "Token d'authentification invalide"
+        "500":
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                serverError:
+                  summary: Erreur interne
+                  value:
+                    error: "Erreur lors de la création du deck"
+
+  /api/decks/mine:
+    get:
+      tags:
+        - Decks
+      summary: Récupérer mes decks
+      description: Retourne tous les decks de l'utilisateur authentifié avec leurs cartes
+      operationId: getMyDecks
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Liste des decks récupérée avec succès
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Deck"
+              examples:
+                success:
+                  summary: Liste de mes decks
+                  value:
+                    - id: 1
+                      name: "Mon Deck Électrique"
+                      userId: 1
+                      cards:
+                        - id: 1
+                          deckId: 1
+                          cardId: 25
+                          cards:
+                            id: 25
+                            name: "Pikachu"
+                            hp: 60
+                            attack: 50
+                            type: "Electric"
+                            pokedexNumber: 25
+                            imgUrl: "https://images.pokemontcg.io/base1/58.png"
+                      createdAt: "2024-01-15T10:30:00.000Z"
+                      updatedAt: "2024-01-15T10:30:00.000Z"
+                    - id: 2
+                      name: "Mon Deck Feu"
+                      userId: 1
+                      cards: []
+                      createdAt: "2024-01-16T14:20:00.000Z"
+                      updatedAt: "2024-01-16T14:20:00.000Z"
+        "401":
+          description: Non authentifié
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                noToken:
+                  summary: Token manquant
+                  value:
+                    error: "Token d'authentification manquant"
+        "500":
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                serverError:
+                  summary: Erreur interne
+                  value:
+                    error: "Erreur lors de la récupération des decks"
+
+  /api/decks/{id}:
+    get:
+      tags:
+        - Decks
+      summary: Récupérer un deck par ID
+      description: Retourne les détails d'un deck spécifique avec ses cartes. L'utilisateur doit être le propriétaire du deck.
+      operationId: getDeckById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID du deck à récupérer
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: Deck récupéré avec succès
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Deck"
+              examples:
+                success:
+                  summary: Détails du deck
+                  value:
+                    id: 1
+                    name: "Mon Deck Électrique"
+                    userId: 1
+                    cards:
+                      - id: 1
+                        deckId: 1
+                        cardId: 25
+                        cards:
+                          id: 25
+                          name: "Pikachu"
+                          hp: 60
+                          attack: 50
+                          type: "Electric"
+                          pokedexNumber: 25
+                          imgUrl: "https://images.pokemontcg.io/base1/58.png"
+                    createdAt: "2024-01-15T10:30:00.000Z"
+                    updatedAt: "2024-01-15T10:30:00.000Z"
+        "400":
+          description: ID invalide
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                invalidId:
+                  summary: ID non numérique
+                  value:
+                    error: "L'ID doit être un nombre valide"
+        "401":
+          description: Non authentifié
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                noToken:
+                  summary: Token manquant
+                  value:
+                    error: "Token d'authentification manquant"
+        "403":
+          description: Non autorisé
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                notOwner:
+                  summary: Pas le propriétaire
+                  value:
+                    error: "Vous n'êtes pas autorisé à accéder à ce deck"
+        "404":
+          description: Deck non trouvé
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                notFound:
+                  summary: Deck introuvable
+                  value:
+                    error: "Deck non trouvé"
+        "500":
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                serverError:
+                  summary: Erreur interne
+                  value:
+                    error: "Erreur lors de la récupération du deck"
+
+    patch:
+      tags:
+        - Decks
+      summary: Modifier un deck
+      description: Modifie le nom et/ou les cartes d'un deck. L'utilisateur doit être le propriétaire. Les cartes doivent toujours être au nombre de 10.
+      operationId: updateDeck
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID du deck à modifier
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Nouveau nom du deck (optionnel)
+                  example: "Mon Deck Électrique V2"
+                cardIds:
+                  type: array
+                  description: Nouveaux IDs de cartes (optionnel, mais doit contenir exactement 10 cartes si fourni)
+                  items:
+                    type: integer
+                  example: [25, 26, 135, 135, 172, 172, 172, 81, 100, 101]
+            examples:
+              updateName:
+                summary: Modifier uniquement le nom
+                value:
+                  name: "Mon Deck Électrique V2"
+              updateCards:
+                summary: Modifier uniquement les cartes
+                value:
+                  cardIds: [1, 4, 7, 25, 39, 52, 63, 74, 92, 133]
+              updateBoth:
+                summary: Modifier nom et cartes
+                value:
+                  name: "Mon Super Deck"
+                  cardIds: [1, 4, 7, 25, 39, 52, 63, 74, 92, 133]
+      responses:
+        "200":
+          description: Deck modifié avec succès
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Deck"
+              examples:
+                success:
+                  summary: Deck mis à jour
+                  value:
+                    id: 1
+                    name: "Mon Deck Électrique V2"
+                    userId: 1
+                    cards:
+                      - id: 1
+                        deckId: 1
+                        cardId: 25
+                        cards:
+                          id: 25
+                          name: "Pikachu"
+                          hp: 60
+                          attack: 50
+                          type: "Electric"
+                          pokedexNumber: 25
+                    createdAt: "2024-01-15T10:30:00.000Z"
+                    updatedAt: "2024-01-15T14:45:00.000Z"
+        "400":
+          description: Données invalides
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                invalidId:
+                  summary: ID invalide
+                  value:
+                    error: "L'ID doit être un nombre valide"
+                invalidCardCount:
+                  summary: Nombre de cartes incorrect
+                  value:
+                    error: "Un deck doit contenir exactement 10 cartes"
+        "401":
+          description: Non authentifié
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                noToken:
+                  summary: Token manquant
+                  value:
+                    error: "Token d'authentification manquant"
+        "403":
+          description: Non autorisé
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                notOwner:
+                  summary: Pas le propriétaire
+                  value:
+                    error: "Vous n'êtes pas autorisé à modifier ce deck"
+        "404":
+          description: Deck non trouvé
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                notFound:
+                  summary: Deck introuvable
+                  value:
+                    error: "Deck non trouvé"
+        "500":
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                serverError:
+                  summary: Erreur interne
+                  value:
+                    error: "Erreur lors de la modification du deck"
+
+    delete:
+      tags:
+        - Decks
+      summary: Supprimer un deck
+      description: Supprime définitivement un deck et toutes ses associations de cartes. L'utilisateur doit être le propriétaire.
+      operationId: deleteDeck
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID du deck à supprimer
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: Deck supprimé avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Deck supprimé avec succès"
+              examples:
+                success:
+                  summary: Suppression réussie
+                  value:
+                    message: "Deck supprimé avec succès"
+        "400":
+          description: ID invalide
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                invalidId:
+                  summary: ID non numérique
+                  value:
+                    error: "L'ID doit être un nombre valide"
+        "401":
+          description: Non authentifié
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                noToken:
+                  summary: Token manquant
+                  value:
+                    error: "Token d'authentification manquant"
+        "403":
+          description: Non autorisé
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                notOwner:
+                  summary: Pas le propriétaire
+                  value:
+                    error: "Vous n'êtes pas autorisé à supprimer ce deck"
+        "404":
+          description: Deck non trouvé
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                notFound:
+                  summary: Deck introuvable
+                  value:
+                    error: "Deck non trouvé"
+        "500":
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                serverError:
+                  summary: Erreur interne
+                  value:
+                    error: "Erreur lors de la suppression du deck"

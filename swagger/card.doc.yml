@@ -1,0 +1,68 @@
+paths:
+  /api/cards:
+    get:
+      tags:
+        - Cards
+      summary: Récupérer toutes les cartes Pokémon
+      description: Retourne la liste complète des cartes Pokémon disponibles, triées par numéro de Pokédex
+      operationId: getAllCards
+      responses:
+        "200":
+          description: Liste des cartes récupérée avec succès
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Card"
+              examples:
+                success:
+                  summary: Liste de cartes
+                  value:
+                    - id: 1
+                      name: "Bulbizarre"
+                      hp: 45
+                      attack: 49
+                      type: "Grass"
+                      pokedexNumber: 1
+                      imgUrl: "https://images.pokemontcg.io/base1/1.png"
+                      createdAt: "2024-01-01T00:00:00.000Z"
+                      updatedAt: "2024-01-01T00:00:00.000Z"
+                    - id: 4
+                      name: "Salamèche"
+                      hp: 39
+                      attack: 52
+                      type: "Fire"
+                      pokedexNumber: 4
+                      imgUrl: "https://images.pokemontcg.io/base1/4.png"
+                      createdAt: "2024-01-01T00:00:00.000Z"
+                      updatedAt: "2024-01-01T00:00:00.000Z"
+                    - id: 7
+                      name: "Carapuce"
+                      hp: 44
+                      attack: 48
+                      type: "Water"
+                      pokedexNumber: 7
+                      imgUrl: "https://images.pokemontcg.io/base1/7.png"
+                      createdAt: "2024-01-01T00:00:00.000Z"
+                      updatedAt: "2024-01-01T00:00:00.000Z"
+                    - id: 25
+                      name: "Pikachu"
+                      hp: 60
+                      attack: 50
+                      type: "Electric"
+                      pokedexNumber: 25
+                      imgUrl: "https://images.pokemontcg.io/base1/58.png"
+                      createdAt: "2024-01-01T00:00:00.000Z"
+                      updatedAt: "2024-01-01T00:00:00.000Z"
+        "500":
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                serverError:
+                  summary: Erreur lors de la récupération
+                  value:
+                    error: "Erreur lors de la récupération des cartes"

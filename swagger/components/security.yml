@@ -1,0 +1,6 @@
+securitySchemes:
+  bearerAuth:
+    type: http
+    scheme: bearer
+    bearerFormat: JWT
+    description: Authentification JWT - Utilisez le token reçu après connexion

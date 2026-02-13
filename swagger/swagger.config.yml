@@ -1,0 +1,26 @@
+openapi: 3.0.0
+info:
+  title: TCG API
+  version: 1.0.0
+  description: API REST pour la gestion de cartes et decks Pokémon TCG
+  contact:
+    name: Support API
+    email: support@tcg-api.com
+
+servers:
+  - url: http://localhost:3000
+    description: Serveur de développement
+  - url: https://api.tcg-app.com
+    description: Serveur de production
+
+tags:
+  - name: Authentication
+    description: Endpoints pour l'inscription et la connexion
+  - name: Cards
+    description: Endpoints pour la gestion des cartes
+  - name: Decks
+    description: Endpoints pour la gestion des decks (protégés par authentification)
+  - name: Health
+    description: Endpoint de santé du serveur
+
+paths: {}

@@ -1,0 +1,244 @@
+paths:
+  /api/auth/sign-up:
+    post:
+      tags:
+        - Authentication
+      summary: Inscription d'un nouvel utilisateur
+      description: Crée un nouveau compte utilisateur avec username, email et mot de passe
+      operationId: signUp
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCredentials"
+            examples:
+              newUser:
+                summary: Nouvel utilisateur
+                value:
+                  username: "johndoe"
+                  email: "john.doe@example.com"
+                  password: "SecureP@ssw0rd123"
+      responses:
+        "201":
+          description: Utilisateur créé avec succès
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+              examples:
+                success:
+                  summary: Inscription réussie
+                  value:
+                    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiam9obmRvZSIsImVtYWlsIjoiam9obi5kb2VAZXhhbXBsZS5jb20iLCJpYXQiOjE2MzQwNDAwMDB9.abc123"
+                    user:
+                      id: 1
+                      username: "johndoe"
+                      email: "john.doe@example.com"
+                      createdAt: "2024-01-15T10:30:00.000Z"
+                      updatedAt: "2024-01-15T10:30:00.000Z"
+        "400":
+          description: Données invalides
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                missingField:
+                  summary: Champ manquant
+                  value:
+                    error: "Le champ 'email' est requis"
+                invalidEmail:
+                  summary: Email invalide
+                  value:
+                    error: "L'email doit être valide"
+                passwordTooShort:
+                  summary: Mot de passe trop court
+                  value:
+                    error: "Le mot de passe doit contenir au moins 8 caractères"
+        "409":
+          description: Conflit - Utilisateur déjà existant
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                emailExists:
+                  summary: Email déjà utilisé
+                  value:
+                    error: "Cet email est déjà utilisé"
+        "500":
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                serverError:
+                  summary: Erreur interne
+                  value:
+                    error: "Erreur lors de la création de l'utilisateur"
+
+  /api/auth/sign-in:
+    post:
+      tags:
+        - Authentication
+      summary: Connexion avec bcryptjs
+      description: Authentifie un utilisateur avec email et mot de passe (utilise bcryptjs)
+      operationId: signIn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginCredentials"
+            examples:
+              validCredentials:
+                summary: Identifiants valides
+                value:
+                  email: "john.doe@example.com"
+                  password: "SecureP@ssw0rd123"
+      responses:
+        "200":
+          description: Connexion réussie
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+              examples:
+                success:
+                  summary: Connexion réussie
+                  value:
+                    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiam9obmRvZSIsImVtYWlsIjoiam9obi5kb2VAZXhhbXBsZS5jb20iLCJpYXQiOjE2MzQwNDAwMDB9.abc123"
+                    user:
+                      id: 1
+                      username: "johndoe"
+                      email: "john.doe@example.com"
+                      createdAt: "2024-01-15T10:30:00.000Z"
+                      updatedAt: "2024-01-15T10:30:00.000Z"
+        "400":
+          description: Données invalides
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                missingField:
+                  summary: Champ manquant
+                  value:
+                    error: "L'email et le mot de passe sont requis"
+        "401":
+          description: Identifiants incorrects
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                wrongCredentials:
+                  summary: Identifiants incorrects
+                  value:
+                    error: "Email ou mot de passe incorrect"
+        "404":
+          description: Utilisateur non trouvé
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                userNotFound:
+                  summary: Utilisateur introuvable
+                  value:
+                    error: "Utilisateur non trouvé"
+        "500":
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                serverError:
+                  summary: Erreur interne
+                  value:
+                    error: "Erreur lors de la connexion"
+
+  /api/auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Connexion avec bcrypt (alternative)
+      description: Authentifie un utilisateur avec email et mot de passe (utilise bcrypt)
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginCredentials"
+            examples:
+              validCredentials:
+                summary: Identifiants valides
+                value:
+                  email: "john.doe@example.com"
+                  password: "SecureP@ssw0rd123"
+      responses:
+        "200":
+          description: Connexion réussie
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+              examples:
+                success:
+                  summary: Connexion réussie
+                  value:
+                    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiam9obmRvZSIsImVtYWlsIjoiam9obi5kb2VAZXhhbXBsZS5jb20iLCJpYXQiOjE2MzQwNDAwMDB9.abc123"
+                    user:
+                      id: 1
+                      username: "johndoe"
+                      email: "john.doe@example.com"
+                      createdAt: "2024-01-15T10:30:00.000Z"
+                      updatedAt: "2024-01-15T10:30:00.000Z"
+        "400":
+          description: Données invalides
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                missingField:
+                  summary: Champ manquant
+                  value:
+                    error: "L'email et le mot de passe sont requis"
+        "401":
+          description: Identifiants incorrects
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                wrongCredentials:
+                  summary: Identifiants incorrects
+                  value:
+                    error: "Email ou mot de passe incorrect"
+        "404":
+          description: Utilisateur non trouvé
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                userNotFound:
+                  summary: Utilisateur introuvable
+                  value:
+                    error: "Utilisateur non trouvé"
+        "500":
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                serverError:
+                  summary: Erreur interne
+                  value:
+                    error: "Erreur lors de la connexion"
