@@ -1,0 +1,80 @@
+User:
+  type: object
+  properties:
+    id:
+      type: integer
+      description: Identifiant unique de l'utilisateur
+      example: 1
+    username:
+      type: string
+      description: Nom d'utilisateur
+      example: "johndoe"
+    email:
+      type: string
+      format: email
+      description: Adresse email
+      example: "john.doe@example.com"
+    createdAt:
+      type: string
+      format: date-time
+      description: Date de création du compte
+    updatedAt:
+      type: string
+      format: date-time
+      description: Date de dernière modification
+  required:
+    - id
+    - username
+    - email
+
+AuthResponse:
+  type: object
+  properties:
+    token:
+      type: string
+      description: Token JWT pour l'authentification
+      example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    user:
+      $ref: "#/components/schemas/User"
+  required:
+    - token
+    - user
+
+UserCredentials:
+  type: object
+  properties:
+    username:
+      type: string
+      description: Nom d'utilisateur
+      example: "johndoe"
+    email:
+      type: string
+      format: email
+      description: Adresse email
+      example: "john.doe@example.com"
+    password:
+      type: string
+      format: password
+      description: Mot de passe
+      example: "SecureP@ssw0rd"
+  required:
+    - username
+    - email
+    - password
+
+LoginCredentials:
+  type: object
+  properties:
+    email:
+      type: string
+      format: email
+      description: Adresse email
+      example: "john.doe@example.com"
+    password:
+      type: string
+      format: password
+      description: Mot de passe
+      example: "SecureP@ssw0rd"
+  required:
+    - email
+    - password

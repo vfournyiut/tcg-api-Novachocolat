@@ -1,0 +1,69 @@
+Card:
+  type: object
+  properties:
+    id:
+      type: integer
+      description: Identifiant unique de la carte
+      example: 1
+    name:
+      type: string
+      description: Nom du Pokémon
+      example: "Pikachu"
+    hp:
+      type: integer
+      description: Points de vie
+      example: 60
+    attack:
+      type: integer
+      description: Points d'attaque
+      example: 50
+    type:
+      type: string
+      enum:
+        [
+          Normal,
+          Fire,
+          Water,
+          Electric,
+          Grass,
+          Ice,
+          Fighting,
+          Poison,
+          Ground,
+          Flying,
+          Psychic,
+          Bug,
+          Rock,
+          Ghost,
+          Dragon,
+          Dark,
+          Steel,
+          Fairy,
+        ]
+      description: Type du Pokémon
+      example: "Electric"
+    pokedexNumber:
+      type: integer
+      description: Numéro dans le Pokédex
+      example: 25
+    imgUrl:
+      type: string
+      format: uri
+      nullable: true
+      description: URL de l'image de la carte
+      example: "https://images.pokemontcg.io/base1/58.png"
+    createdAt:
+      type: string
+      format: date-time
+      description: Date de création
+    updatedAt:
+      type: string
+      format: date-time
+      description: Date de dernière modification
+  required:
+    - id
+    - name
+    - hp
+    - attack
+    - type
+    - pokedexNumber

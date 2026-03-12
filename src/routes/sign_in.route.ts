@@ -7,6 +7,46 @@ import { env } from '../env';
 // POST /auth/login
 export const signInRouter =  Router();
 
+/**
+ * Route POST /api/auth/sign-in
+ * Authentifie un utilisateur existant avec email et mot de passe.
+ * Vérifie les identifiants et génère un token JWT en cas de succès.
+ * 
+ * @route POST /api/auth/sign-in
+ * @access Public
+ * 
+ * @param {Object} req.body - Corps de la requête
+ * @param {string} req.body.email - Email de l'utilisateur
+ * @param {string} req.body.password - Mot de passe en clair
+ * 
+ * @returns {Response} 200 - Connexion réussie avec token JWT
+ * @returns {Response} 400 - Champs requis manquants
+ * @returns {Response} 401 - Email ou mot de passe incorrect
+ * @returns {Response} 500 - Erreur serveur
+ * 
+ * @throws {400} Champs requis manquants - Email ou mot de passe non fourni
+ * @throws {401} Identifiants invalides - Email inexistant ou mot de passe incorrect
+ * @throws {500} Erreur serveur - Problème lors de la connexion ou génération du token
+ * 
+ * @example
+ * // Requête
+ * POST /api/auth/sign-in
+ * {
+ *   "email": "user@example.com",
+ *   "password": "myPassword123"
+ * }
+ * 
+ * // Réponse réussie (200)
+ * {
+ *   "message": "Connexion réussie",
+ *   "token": "eyJhbGciOiJIUzI1NiIs...",
+ *   "user": {
+ *     "id": 1,
+ *     "username": "john_doe",
+ *     "email": "user@example.com"
+ *   }
+ * }
+ */
 signInRouter.post('/sign-in', async (req, res) => {
     const {email, password} = req.body;
 

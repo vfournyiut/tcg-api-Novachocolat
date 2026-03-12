@@ -1,0 +1,73 @@
+Deck:
+  type: object
+  properties:
+    id:
+      type: integer
+      description: Identifiant unique du deck
+      example: 1
+    name:
+      type: string
+      description: Nom du deck
+      example: "Mon Deck Électrique"
+    userId:
+      type: integer
+      description: ID du propriétaire du deck
+      example: 1
+    cards:
+      type: array
+      description: Liste des cartes du deck
+      items:
+        $ref: "#/components/schemas/DeckCard"
+    createdAt:
+      type: string
+      format: date-time
+      description: Date de création
+    updatedAt:
+      type: string
+      format: date-time
+      description: Date de dernière modification
+  required:
+    - id
+    - name
+    - userId
+
+DeckCard:
+  type: object
+  properties:
+    id:
+      type: integer
+      description: Identifiant unique de l'association
+      example: 1
+    deckId:
+      type: integer
+      description: ID du deck
+      example: 1
+    cardId:
+      type: integer
+      description: ID de la carte
+      example: 25
+    cards:
+      $ref: "#/components/schemas/Card"
+  required:
+    - id
+    - deckId
+    - cardId
+
+DeckInput:
+  type: object
+  properties:
+    name:
+      type: string
+      description: Nom du deck
+      example: "Mon Deck Électrique"
+    cardIds:
+      type: array
+      description: Liste des IDs des cartes (exactement 10 cartes requises)
+      items:
+        type: integer
+      example: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+      minItems: 10
+      maxItems: 10
+  required:
+    - name
+    - cardIds
